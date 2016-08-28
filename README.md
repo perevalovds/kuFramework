@@ -1,16 +1,16 @@
-﻿#kuFramework
+#kuFramework
 kuFramework is porting of openFrameworks non-graphic modules for using in non-openFrameworks projects.
 
 It includes 
-*working with ini-files ''kuIniSettings''
-*working with xml-files ''kuXmlSettings''
-*2d and 3d vectors ''int2'', ''int3'', ''float2'', 'float3'
+* working with ini-files ''kuIniSettings''
+* working with xml-files ''kuXmlSettings''
+* 2d and 3d vectors ''int2'', ''int3'', ''float2'', 'float3'
 
 
 There are several modules, which are platform dependent:
-*kuImages_of,
-*kuImages_qt,
-*and others.
+* kuImages_of,
+* kuImages_qt,
+* and others.
 
 If you need no image processing using kuRaster_..., just don't include them in your project.
 
