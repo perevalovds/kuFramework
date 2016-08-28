@@ -53,6 +53,15 @@ void kuRasterMult( kuRaster_f32 &img, float koef ) {
 }
 
 //-----------------------------------------------------------------
+void kuRasterMult( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &res ) { //Попиксельное умножение
+	kuAssert( a.equalSize(b), "kuRasterMult - different image sizes" );
+	res.allocate(a.w, a.h);
+    for (int i=0; i<a.w * a.h; i++) {
+        res.pixels()[i] = a.pixels()[i] * b.pixels()[i];
+    }
+}
+
+//-----------------------------------------------------------------
 void kuRasterAdd( kuRaster_f32 &img, float add ) {
     for (int i=0; i<img.w * img.h; i++) {
         img.pixelsPointer()[i] += add;

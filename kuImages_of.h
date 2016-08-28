@@ -12,5 +12,5 @@ bool kuSaveImage( kuRaster_u8_3 &pix, const string &fileName );
 bool kuLoadImage( kuRaster_u8 &pix, const string &fileName );
 bool kuLoadImage( kuRaster_u8_3 &pix, const string &fileName );
 
-void toOf( kuRaster_u8 &img, ofPixels &pixels );
-void toKu( ofPixels &pixels, kuRaster_u8 &img );
+void kuSaveImage( kuRaster_u8 &img, ofPixels &pixels );
+void kuLoadImage( ofPixels &pixels, kuRaster_u8 &img );

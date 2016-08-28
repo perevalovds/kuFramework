@@ -156,6 +156,8 @@ u8 kuGetBilinearBits_u8( kuRaster_u8 &img, float x, float y, float thresh = 0.5 
 
 
 void kuRasterMult( kuRaster_f32 &img, float koef ); //Умножение на скаляр
+void kuRasterMult( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &res ); //Попиксельное умножение
+
 void kuRasterAdd( kuRaster_f32 &img, float add );
 void kuRasterMin( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &out );
 
@@ -244,6 +246,43 @@ double kuGauss1D::get( T *data, int w, int center ) {
     return sum;
 }
 
+
+//Гауссово сглаживание изображений
+template <typename T>
+void kuFilterGauss( kuRaster_<T> &in, kuRaster_<T> &out, int2 rad, float2 sigma ) {
+	kuGauss1D gaussX, gaussY;
+	gaussX.setup( rad.x, sigma.x );
+	gaussY.setup( rad.y, sigma.y );
+	vector<double> filterX = gaussX.filter();
+	vector<double> filterY = gaussY.filter();
+	int w = in.w;
+	int h = in.h;
+	kuRaster_f32 temp;
+	temp.allocate(w,h);
+
+	//TODO сделать расширение изображения, чтобы до края сглаживал
+	//сглаживание по x
+	for (int y=0; y<h; y++) {
+		for (int x=0; x<w-filterX.size(); x++) {
+			double s = 0;
+			for (int q=0; q<filterX.size(); q++) {
+				s += in.pixel(x+q,y) * filterX[q];
+			}
+			temp.pixel(x+rad.x,y) = s;
+		}
+	}
+	//сглаживание по y
+	out.allocate(w,h);
+	for (int x=0; x<w; x++) {
+		for (int y=0; y<h-filterY.size(); y++) {
+			double s = 0;
+			for (int q=0; q<filterY.size(); q++) {
+				s += temp.pixel(x,y+q) * filterY[q];
+			}
+			out.pixel(x,y+rad.y) = s;
+		}
+	}
+}
 
 //----------------------------------------
 //----------------------------------------
