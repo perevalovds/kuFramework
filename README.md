@@ -6,7 +6,7 @@ It includes
 * working with xml-files 'kuXmlSettings'
 * 2d and 3d vectors 'int2', 'int3', 'float2', 'float3'
 
-To use 'kuFramework' in your project, include its .h and .cpp files to your project, except kuImages_... files (see description below)
+To use kuFramework in your project, include its .h and .cpp files to your project, except kuImages_... files (see description below)
 and add '#include "kuMain.h" to use it.
 
 
