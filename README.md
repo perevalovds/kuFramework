@@ -1,4 +1,4 @@
-﻿==kuFramework==
+﻿#kuFramework
 This is porting of openFrameworks non-graphic modules for using in non-openFrameworks projects.
 
 There are several modules, which are platform dependent:
