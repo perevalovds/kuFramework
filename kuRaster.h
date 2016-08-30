@@ -158,6 +158,7 @@ u8 kuGetBilinearBits_u8( kuRaster_u8 &img, float x, float y, float thresh = 0.5 
 void kuRasterMult( kuRaster_f32 &img, float koef ); //Умножение на скаляр
 void kuRasterMult( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &res ); //Попиксельное умножение
 
+void kuRasterAdd( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &res, float ka, float kb );
 void kuRasterAdd( kuRaster_f32 &img, float add );
 void kuRasterMin( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &out );
 
