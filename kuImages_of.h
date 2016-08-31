@@ -14,3 +14,6 @@ bool kuLoadImage( kuRaster_u8_3 &pix, const string &fileName );
 
 void kuSaveImage( kuRaster_u8 &img, ofPixels &pixels );
 void kuLoadImage( ofPixels &pixels, kuRaster_u8 &img );
+
+void kuSaveImage( kuRaster_u8_3 &img, ofPixels &pixels );
+void kuLoadImage( ofPixels &pixels, kuRaster_u8_3 &img );

@@ -44,3 +44,31 @@ void kuLoadImage( ofPixels &pixels, kuRaster_u8 &img ) {
 	}
 }
 
+//------------------------------------------------------------------------
+void kuSaveImage( kuRaster_u8_3 &img, ofPixels &pixels ) {
+	int w = img.w;
+	int h = img.h;
+	pixels.allocate( w, h, OF_IMAGE_COLOR );
+	for (int i=0; i<w*h; i++) {
+		pixels.getPixels()[3*i+0] = img.pixels()[i].v.v[0];
+		pixels.getPixels()[3*i+1] = img.pixels()[i].v.v[1];
+		pixels.getPixels()[3*i+2] = img.pixels()[i].v.v[2];
+	}
+}
+
+//------------------------------------------------------------------------
+void kuLoadImage( ofPixels &pixels, kuRaster_u8_3 &img ) {
+	img.clear();
+	if ( pixels.getNumChannels() == 3 ) {
+		int w = pixels.getWidth();
+		int h = pixels.getHeight();
+		img.allocate( w, h );
+		for (int i=0; i<w*h; i++) {
+			img.pixels()[i].v.v[0] = pixels.getPixels()[3*i+0];
+			img.pixels()[i].v.v[1] = pixels.getPixels()[3*i+1];
+			img.pixels()[i].v.v[2] = pixels.getPixels()[3*i+2];
+		}
+	}
+}
+
+//------------------------------------------------------------------------
