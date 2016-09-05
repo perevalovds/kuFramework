@@ -3,21 +3,34 @@
 
 //------------------------------------------------------------------------
 bool kuSaveImage( kuRaster_u8 &pix, const string &fileName ) {
+	ofPixels px;
+	kuSaveImage( pix, px );
+	ofSaveImage( px, fileName );
 	return true;
 }
 
 //------------------------------------------------------------------------
 bool kuSaveImage( kuRaster_u8_3 &pix, const string &fileName ) {
+	ofPixels px;
+	kuSaveImage( pix, px );
+	ofSaveImage( px, fileName );	
 	return true;
 }
 
 //------------------------------------------------------------------------
 bool kuLoadImage( kuRaster_u8 &pix, const string &fileName ) {
+	ofPixels px;
+	ofLoadImage( px, fileName );
+	px.setImageType( OF_IMAGE_GRAYSCALE );
+	kuLoadImage( px, pix );
 	return true;
 }
 
 //------------------------------------------------------------------------
 bool kuLoadImage( kuRaster_u8_3 &pix, const string &fileName ) {
+	ofPixels px;
+	ofLoadImage( px, fileName );
+	kuLoadImage( px, pix );
 	return true;
 }
 
