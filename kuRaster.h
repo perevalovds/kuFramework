@@ -33,6 +33,10 @@ union u8_3 {
     u8_3( int val = 0 ) {
         c.r=c.g=c.b=val;
     }
+    u8_3( u8 r, u8 g, u8 b ) {
+        c.r=r; c.g=g; c.b=b;
+    }
+
 };
 
 //Типы растров

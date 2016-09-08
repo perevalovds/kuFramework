@@ -79,7 +79,19 @@ void kuRasterAdd( kuRaster_f32 &img, float add ) {
 }
 
 //-----------------------------------------------------------------
+void kuRasterMin( kuRaster_u8 &a, kuRaster_u8 &b, kuRaster_u8 &out ) {
+	kuAssert( a.equalSize(b), "kuRasterMin, different sizes!" );
+    if ( !out.equalSize( a ) ) {
+        out.allocate( a.w, a.h );
+    }
+    for (int i=0; i<a.w * a.h; i++) {
+        out.pixelsPointer()[i] = min( a.pixelsPointer()[i], b.pixelsPointer()[i] );
+    }
+}
+
+//-----------------------------------------------------------------
 void kuRasterMin( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &out ) {
+	kuAssert( a.equalSize(b), "kuRasterMin, different sizes!" );
     if ( !out.equalSize( a ) ) {
         out.allocate( a.w, a.h );
     }
@@ -375,6 +387,20 @@ void kuRasterAnd( kuRaster_u8 &img1, kuRaster_u8 &img2, kuRaster_u8 &imgOut ) {
 }
 
 //-----------------------------------------------------------------
+//Применить маску к цветному изображению
+void kuRasterApplyMask( kuRaster_u8_3 &input, kuRaster_u8 &mask, kuRaster_u8_3 &output, u8_3 fill_color ) {
+	kuAssert( input.equalSize(mask), "kuRasterApplyMask, different image and mask sizes" );
+	int w = input.w;
+	int h = input.h;
+	input.copyTo(output);
+	for (int i=0; i<w*h; i++) {
+		if ( mask.pixels()[i] == 0 ) {
+			output.pixels()[i] = fill_color;
+		}
+	}
+}
+
+//-----------------------------------------------------------------
 int kuRasterCountNonZero( kuRaster_u8 &img, int X, int Y, int w, int h ) {
     kuAssert( w >= 0 && h >= 0 && X >= 0 && X+w <= img.w
               && Y >= 0 && Y+h <= img.h, "kuRasterCountNonZero, bad region" );
@@ -523,16 +549,16 @@ size_t kuFloodFill_( kuRaster_u8 &input, kuRaster_f32 &input2, int sv,
 
 //-----------------------------------------------------------------
 //удаление шума на маске
-void kuNoiseRemove( kuRaster_u8 &input, kuRaster_u8 &output, int noise_remove ) {
+void kuRasterDenoise( kuRaster_u8 &input, kuRaster_u8 &output, int noise_remove, int sv ) {
 	int w = input.w;
 	int h = input.h;
 	input.copyTo(output);
 	for (int y=0; y<h; y++) {
 		for (int x=0; x<w; x++) {
 			if ( output.pixel(x,y) == 255 ) {
-				int size = kuFloodFill( output, 8, x, y, 255, 128 );
+				int size = kuFloodFill( output, sv, x, y, 255, 128 );
 				if ( size < noise_remove ) {
-					kuFloodFill( output, 8, x, y, 128, 0 );
+					kuFloodFill( output, sv, x, y, 128, 0 );
 				}
 			}
 		}
@@ -540,6 +566,113 @@ void kuNoiseRemove( kuRaster_u8 &input, kuRaster_u8 &output, int noise_remove ) 
 	//восстанавливаем цвет
 	output.threshold(128,0,255);
 
+}
+
+//-----------------------------------------------------------------
+//выделение максимальной области на маске
+void kuRasterMaxBlob( kuRaster_u8 &input, kuRaster_u8 &output, int sv ) {
+	int w = input.w;
+	int h = input.h;
+	input.copyTo(output);
+	int Size = 0;
+	int X = 0;
+	int Y = 0;
+	for (int y=0; y<h; y++) {
+		for (int x=0; x<w; x++) {
+			if ( output.pixel(x,y) == 255 ) {
+				int size = kuFloodFill( output, sv, x, y, 255, 64 );
+				if ( size > Size ) {
+					Size = size;
+					X = x;
+					Y = y;
+				}
+			}
+		}
+	}
+	if ( Size > 0 ) {
+		kuFloodFill( output, sv, X, Y, 64, 128 );
+	}
+
+	//восстанавливаем цвет
+	output.threshold(128,0,255);
+
+}
+
+//-----------------------------------------------------------------
+void kuRasterFillHoles( kuRaster_u8 &input, kuRaster_u8 &output, int sv ) {
+	int w = input.w;
+	int h = input.h;
+
+	kuRaster_u8 temp;
+	temp.allocate(w+2,h+2);
+	input.draw( temp, 1, 1 );
+	kuFloodFill( temp, sv, 0, 0, 0, 64 );
+	temp.cropTo(output, 1, 1, w, h );
+	//восстанавливаем цвет
+	for (int i=0; i<w*h; i++) {
+		u8 &v = output.pixels()[i];
+		v = (v==64)?0:255;
+	}
+}
+
+
+//-----------------------------------------------------------------
+vector<int2> kuMakeCircle( int rad ) {	//набор точек, описывающих круг заданного радиуса
+	vector<int2> pnt;
+	for (int y=-rad; y<=rad; y++) {
+		for (int x=-rad; x<=rad; x++) {
+			if ( x*x + y*y <= rad*rad ) {
+				pnt.push_back( int2(x,y) );
+			}
+		}
+	}
+	return pnt;
+}
+
+//-----------------------------------------------------------------
+void kuRasterDilate( kuRaster_u8 &input, kuRaster_u8 &output, int rad ) {
+	vector<int2> pnt = kuMakeCircle( rad );
+	int n = pnt.size();
+	int w = input.w;
+	int h = input.h;
+	output.allocate(w,h);
+	for (int y=0; y<h; y++) {
+		for (int x=0; x<w; x++) {
+			for (int i=0; i<n; i++) {
+				int x1 = x + pnt[i].x;
+				int y1 = y + pnt[i].y;
+				if ( x1>=0 && x1<w && y1>=0 && y1<h) {
+					if (input.pixel(x1,y1) > 0 ) {
+						output.pixel(x,y) = 255;
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------
+void kuRasterErode( kuRaster_u8 &input, kuRaster_u8 &output, int rad ) {
+	vector<int2> pnt = kuMakeCircle( rad );
+	int n = pnt.size();
+	int w = input.w;
+	int h = input.h;
+	output.allocate(w,h, 255);
+	for (int y=0; y<h; y++) {
+		for (int x=0; x<w; x++) {
+			for (int i=0; i<n; i++) {
+				int x1 = x + pnt[i].x;
+				int y1 = y + pnt[i].y;
+				if ( x1>=0 && x1<w && y1>=0 && y1<h) {
+					if (input.pixel(x1,y1) == 0 ) {
+						output.pixel(x,y) = 0;
+						break;
+					}
+				}
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------

@@ -16,6 +16,7 @@ void kuRasterMult( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &res ); //По
 
 void kuRasterAdd( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &res, float ka, float kb );
 void kuRasterAdd( kuRaster_f32 &img, float add );
+void kuRasterMin( kuRaster_u8 &a, kuRaster_u8 &b, kuRaster_u8 &out );
 void kuRasterMin( kuRaster_f32 &a, kuRaster_f32 &b, kuRaster_f32 &out );
 
 void kuRasterMedian( kuRaster_u8 &img, kuRaster_u8 &imgOut, int winRad );
@@ -35,8 +36,13 @@ void kuRasterMedianQuantile(kuRaster_f32 &rst, kuRaster_f32 &rstOut,
 void kuRasterSmoothInMask(kuRaster_f32 &in, kuRaster_f32 &out, kuRaster_u8 &mask,
                         int winRad, int shrink, float dopusk );
 
+//Работа с масками ----------------------------------
 //можно выполнять in-place
 void kuRasterAnd( kuRaster_u8 &img1, kuRaster_u8 &img2, kuRaster_u8 &imgOut );
+
+//Применить маску к цветному изображению
+void kuRasterApplyMask( kuRaster_u8_3 &input, kuRaster_u8 &mask, kuRaster_u8_3 &output, u8_3 fill_color );
+
 int kuRasterCountNonZero( kuRaster_u8 &img, int x, int y, int w, int h );
 kuRecti kuRasterRectNonZero( kuRaster_u8 &img, int x, int y, int w, int h );
 
@@ -51,9 +57,20 @@ size_t kuFloodFill_( kuRaster_u8 &input, kuRaster_f32 &input2, int sv,
                  int x0, int y0, u8 search, u8 fillColor, f32 search2, vector<int2> *outPoints );
 
 //удаление шума на маске
-void kuNoiseRemove( kuRaster_u8 &input, kuRaster_u8 &output, int noise_remove );
+void kuRasterDenoise( kuRaster_u8 &input, kuRaster_u8 &output, int noise_remove, int sv = 8 );
 
-//Работа с цветными изображениями
+//выделение максимальной области на маске
+void kuRasterMaxBlob( kuRaster_u8 &input, kuRaster_u8 &output, int sv = 8 );
+
+//заливка дырок
+void kuRasterFillHoles( kuRaster_u8 &input, kuRaster_u8 &output, int sv = 8 );
+
+//морфологические операции
+void kuRasterDilate( kuRaster_u8 &input, kuRaster_u8 &output, int rad );
+void kuRasterErode( kuRaster_u8 &input, kuRaster_u8 &output, int rad );
+vector<int2> kuMakeCircle( int rad );	//набор точек, описывающих круг заданного радиуса
+
+//Работа с цветными изображениями ----------------------------------
 void kuRasterDesaturate( kuRaster_u8_3 &input, kuRaster_u8 &gray );
 
 void kuRasterSplit( kuRaster_u8_3 &input, vector<kuRaster_u8> &rgb );
