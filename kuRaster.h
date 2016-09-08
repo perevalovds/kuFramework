@@ -45,7 +45,7 @@ typedef kuRaster_<s16> kuRaster_s16;
 typedef kuRaster_<s32> kuRaster_s32;
 typedef kuRaster_<f32> kuRaster_f32;
 typedef kuRaster_<u16> kuRaster_u16;
-typedef kuRaster_<u8_3> kuRaster_u8_3;
+typedef kuRaster_<u8_3> kuRaster_u8_3;		//для его resize - следует использовать kuRasterResize(...)
 
 
 //Номера типов
@@ -58,10 +58,12 @@ const int kuRaster_type_u16 = 5;
 
 
 //Один растр
+//ВНИМАНИЕ: Нельзя присваивать один растр другому, вместо этого следует делать a.copyTo(b)
 template <typename T>
 class kuRaster_ {
 public:
 	kuRaster_() { w = h = 0; _pixels = 0; }
+	~kuRaster_() { clear(); }
 
     int type();
     int pixelSize() const { return sizeof(T); }
@@ -72,7 +74,7 @@ public:
     void setFromPixels( int w, int h, T* dataToCopy );
     void setFromPixelsPointer( int w, int h, vector<T> *pixelsNoCopy );
 
-    void releasePixels();   //освобождает массив пикселей
+    void releasePixels();   //освобождает массив пикселей для внешнего использования
     void clear();
 	bool empty() { return ( w > 0 && h > h ); }
     bool isEqualTo( T value );    //равен ли константе
@@ -309,7 +311,7 @@ template <typename T>
 void kuRaster_<T>::clear()									
 {
 	w = h = 0;
-	delete _pixels;
+	if ( _pixels ) { delete _pixels; }
 	_pixels = 0;
 }
 
