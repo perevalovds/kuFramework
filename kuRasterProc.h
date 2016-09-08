@@ -50,6 +50,18 @@ size_t kuFloodFill( kuRaster_f32 &input, int sv,
 size_t kuFloodFill_( kuRaster_u8 &input, kuRaster_f32 &input2, int sv,
                  int x0, int y0, u8 search, u8 fillColor, f32 search2, vector<int2> *outPoints );
 
+//удаление шума на маске
+void kuNoiseRemove( kuRaster_u8 &input, kuRaster_u8 &output, int noise_remove );
+
+//Работа с цветными изображениями
+void kuRasterDesaturate( kuRaster_u8_3 &input, kuRaster_u8 &gray );
+
+void kuRasterSplit( kuRaster_u8_3 &input, vector<kuRaster_u8> &rgb );
+void kuRasterMerge( vector<kuRaster_u8> &rgb, kuRaster_u8_3 &output );
+
+//Изменение размеров цветного изображения
+void kuRasterResize( kuRaster_u8_3 &input, kuRaster_u8_3 &output, int w, int h, int interp_type );
+
 
 //Фильтрация
 struct kuGauss1D {
@@ -119,4 +131,5 @@ void kuFilterGauss( kuRaster_<T> &in, kuRaster_<T> &out, int2 rad, float2 sigma 
 }
 
 //----------------------------------------
+
 

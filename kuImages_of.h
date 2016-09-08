@@ -17,3 +17,9 @@ void kuLoadImage( ofPixels &pixels, kuRaster_u8 &img );
 
 void kuSaveImage( kuRaster_u8_3 &img, ofPixels &pixels );
 void kuLoadImage( ofPixels &pixels, kuRaster_u8_3 &img );
+
+
+void kuSaveImage( kuRaster_u8 &img, ofImage &image );
+void kuSaveImage( kuRaster_u8 &img, ofTexture &texture );
+void kuSaveImage( kuRaster_u8_3 &img, ofImage &image );
+void kuSaveImage( kuRaster_u8_3 &img, ofTexture &texture );

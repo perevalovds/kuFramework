@@ -522,6 +522,27 @@ size_t kuFloodFill_( kuRaster_u8 &input, kuRaster_f32 &input2, int sv,
 }
 
 //-----------------------------------------------------------------
+//удаление шума на маске
+void kuNoiseRemove( kuRaster_u8 &input, kuRaster_u8 &output, int noise_remove ) {
+	int w = input.w;
+	int h = input.h;
+	input.copyTo(output);
+	for (int y=0; y<h; y++) {
+		for (int x=0; x<w; x++) {
+			if ( output.pixel(x,y) == 255 ) {
+				int size = kuFloodFill( output, 8, x, y, 255, 128 );
+				if ( size < noise_remove ) {
+					kuFloodFill( output, 8, x, y, 128, 0 );
+				}
+			}
+		}
+	}
+	//восстанавливаем цвет
+	output.threshold(128,0,255);
+
+}
+
+//-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //-----------------------------------------------------------------
 //Фильтрация
@@ -564,5 +585,64 @@ string kuGauss1D::print( bool full ) {
     }
     return s;
 }
+
+
+//-----------------------------------------------------------------
+void kuRasterDesaturate( kuRaster_u8_3 &input, kuRaster_u8 &gray ) {
+	int w = input.w;
+	int h = input.h;
+	gray.allocate(w,h);
+	for (int i=0; i<w*h; i++) {
+		u8_3 &c = input.pixels()[i];
+		gray.pixels()[i] = int(c.c.r*0.3f + c.c.g*0.59f + c.c.b*0.11f);
+		//http://stackoverflow.com/questions/9320953/what-algorithm-does-photoshop-use-to-desaturate-an-image
+		//R*.3 + G*.59++B*.11
+		//float bw = (fminf(r, fminf(g, b)) + fmaxf(r, fmaxf(g, b))) * 0.5f;
+	}
+}
+
+//-----------------------------------------------------------------
+void kuRasterSplit( kuRaster_u8_3 &input, vector<kuRaster_u8> &rgb ) {
+	int w = input.w;
+	int h = input.h;
+	rgb.resize(3);
+	for (int i=0; i<3; i++) {
+		rgb[i].allocate(w,h);
+	}
+	for (int i=0; i<w*h; i++) {
+		u8_3 &c = input.pixels()[i];
+		rgb[0].pixels()[i] = c.c.r;
+		rgb[1].pixels()[i] = c.c.g;
+		rgb[2].pixels()[i] = c.c.b;	
+	}
+}
+
+//-----------------------------------------------------------------
+void kuRasterMerge( vector<kuRaster_u8> &rgb, kuRaster_u8_3 &output ) {
+	kuAssert( rgb.size() == 3, "kuRasterMerge - requred 3 channels" );
+	kuAssert( rgb[0].equalSize(rgb[1]) && rgb[0].equalSize(rgb[2]), "kuRasterMerge - requred equal rasters" );
+	int w = rgb[0].w;
+	int h = rgb[0].h;
+	output.allocate(w,h);
+	for (int i=0; i<w*h; i++) {
+		u8_3 &c = output.pixels()[i];
+		c.c.r = rgb[0].pixels()[i];
+		c.c.g = rgb[1].pixels()[i];
+		c.c.b = rgb[2].pixels()[i];	
+	}
+}
+
+//-----------------------------------------------------------------
+//Изменение размеров цветного изображения
+void kuRasterResize( kuRaster_u8_3 &input, kuRaster_u8_3 &output, int w, int h, int interp_type ) {
+	vector<kuRaster_u8> rgb, rgb1;
+	kuRasterSplit( input, rgb );
+	rgb1.resize( rgb.size() );
+	for (int i=0; i<rgb.size(); i++) {
+		rgb[i].resizeTo( rgb1[i], w, h, interp_type );
+	}
+	kuRasterMerge( rgb1, output );
+}
+
 
 //-----------------------------------------------------------------

@@ -85,3 +85,31 @@ void kuLoadImage( ofPixels &pixels, kuRaster_u8_3 &img ) {
 }
 
 //------------------------------------------------------------------------
+void kuSaveImage( kuRaster_u8 &img, ofImage &image ) {
+	ofPixels pix;
+	kuSaveImage( img, pix );
+	image.setFromPixels( pix );
+}
+
+//------------------------------------------------------------------------
+void kuSaveImage( kuRaster_u8 &img, ofTexture &texture ) {
+	ofPixels pix;
+	kuSaveImage( img, pix );
+	texture.loadData( pix );
+}
+
+//------------------------------------------------------------------------
+void kuSaveImage( kuRaster_u8_3 &img, ofImage &image ) {
+	ofPixels pix;
+	kuSaveImage( img, pix );
+	image.setFromPixels( pix );
+}
+
+//------------------------------------------------------------------------
+void kuSaveImage( kuRaster_u8_3 &img, ofTexture &texture ) {
+	ofPixels pix;
+	kuSaveImage( img, pix );
+	texture.loadData( pix );
+}
+
+//------------------------------------------------------------------------
