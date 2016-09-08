@@ -58,7 +58,6 @@ const int kuRaster_type_u16 = 5;
 
 
 //Один растр
-//ВНИМАНИЕ: Нельзя присваивать один растр другому, вместо этого следует делать a.copyTo(b)
 template <typename T>
 class kuRaster_ {
 public:
@@ -76,7 +75,9 @@ public:
 
     void releasePixels();   //освобождает массив пикселей для внешнего использования
     void clear();
-	bool empty() { return ( w > 0 && h > h ); }
+	bool empty() const { 
+		return ( w == 0 && h == 0 ); 
+	}
     bool isEqualTo( T value );    //равен ли константе
     int countValues( T value );   //подсчёт значений, равных value
     void replaceValue( T value, T value1 );
@@ -97,6 +98,7 @@ public:
 
 	vector<T> &pixels() { return *_pixels; }
 	T* pixelsPointer() { return (empty())? 0 : &pixels()[0]; }
+
     T &pixel( size_t x, size_t y ) { return pixels()[ x + w * y ]; }  //взятие пикселя без контроля границ
     T &pixelSafe( size_t x, size_t y ) {   //взятие пикселя с контролем границ
         kuAssert( kuInAreai(x,y,w,h), "kuRaster_::pixelSafe - bad pixel " + kuToString(x) + "," + kuToString(y)
@@ -108,6 +110,7 @@ public:
     void setPixelSafe( float2 p, T value );
 
     T* pixelsPointer() const { return (empty())? 0 : &pixels()[0]; }
+
     size_t pixelsPointerSizeInBytes() { return (empty())? 0: size_t(w)*size_t(h)*size_t(pixelSize()); }
 
     T pixelBilinear( float x, float y );   //билинейная интерполяция
@@ -128,7 +131,7 @@ public:
     void pasteTo( kuRaster_<T> &rst, int X, int Y ) { draw( rst, X, Y ); }
 
     template <typename T1>
-    void copyTo( kuRaster_<T1> &rst );
+    void copyTo( kuRaster_<T1> &rst ) const;
     template <typename T1>
     void copyToNormalized( kuRaster_<T1> &rst, double minV, double maxV ); //нормализовать значения
 
@@ -152,11 +155,11 @@ public:
 private:
     vector<T> *_pixels;
 
-	
-	// copy and assignment prohibited	
-	//https://habrahabr.ru/company/abbyy/blog/142595/
-	kuRaster_( const kuRaster_& );
-	void kuRaster_::operator=( const kuRaster_& );
+public:
+	//Операции копирования и присваивания
+	kuRaster_( const kuRaster_&a ) {  w = h = 0; _pixels = 0; a.copyTo(*this); }
+	void kuRaster_::operator=( const kuRaster_& a) { a.copyTo(*this); }
+
 };
 
 
@@ -793,13 +796,20 @@ void kuRaster_<T>::threshold( T thresh, T value0, T value1 ) {
 //----------------------------------------
 template <typename T>
 template <typename T1>
-void kuRaster_<T>::copyTo( kuRaster_<T1> &rst ) {
-    rst.allocate( w, h );
-    T* pix = pixelsPointer();
-    T1* pixOut = rst.pixelsPointer();
-    for (size_t i=0; i<w*h; i++) {
-        pixOut[ i ] = pix[ i ];
-    }
+void kuRaster_<T>::copyTo( kuRaster_<T1> &rst ) const {
+	if ( !empty() ) {
+	    rst.allocate( w, h );
+		//T* pix = pixelsPointer();
+		T1* pixOut = rst.pixelsPointer();
+		for (size_t i=0; i<w*h; i++) {
+			pixOut[ i ] = (*_pixels)[i]; //pix[ i ];
+	    }
+	}
+	else {
+		if ( !rst.empty() ) {
+			rst.clear();
+		}
+	}
 }
 
 //----------------------------------------
