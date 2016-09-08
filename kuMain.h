@@ -8,6 +8,8 @@
 #include "kuUtils.h"
 #include "kuValueMap.h"
 #include "kuRaster.h"
+#include "kuRasterProc.h"
+
 
 #include "kuArgs.h"
 #include "kuIniSettings.h"

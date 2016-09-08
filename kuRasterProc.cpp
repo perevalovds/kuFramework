@@ -1,4 +1,5 @@
 ﻿#include "kuRaster.h"
+#include "kuRasterProc.h"
 #include "kuMain.h"
 
 //Обработка растров
