@@ -133,44 +133,44 @@ void kuRecti::translateY(int dy) {
 }
 
 //----------------------------------------------------------
-void kuRecti::scale(int s) {
+void kuRecti::scale(float s) {
     scaleWidth(s);
     scaleHeight(s);
 }
 
 //----------------------------------------------------------
-void kuRecti::scale(int sX, int sY) {
+void kuRecti::scale(float sX, float sY) {
     scaleWidth(sX);
     scaleHeight(sY);
 }
 
 //----------------------------------------------------------
-void kuRecti::scale(const int2& s) {
+void kuRecti::scale(const float2& s) {
     scaleWidth(s.x);
     scaleHeight(s.y);
 }
 
 //----------------------------------------------------------
-void kuRecti::scaleWidth(int  sX) {
+void kuRecti::scaleWidth(float sX) {
     w  *= sX;
 }
 //----------------------------------------------------------
-void kuRecti::scaleHeight(int sY) {
+void kuRecti::scaleHeight(float sY) {
     h *= sY;
 }
 
 //----------------------------------------------------------
-void kuRecti::scaleFromCenter(int s) {
+void kuRecti::scaleFromCenter(float s) {
     scaleFromCenter(s,s);
 }
 
 //----------------------------------------------------------
-void kuRecti::scaleFromCenter(int sX, int sY) {
-    scaleFromCenter(int2(sX,sY));
+void kuRecti::scaleFromCenter(float sX, float sY) {
+    scaleFromCenter(float2(sX,sY));
 }
 
 //----------------------------------------------------------
-void kuRecti::scaleFromCenter(const int2& s) {
+void kuRecti::scaleFromCenter(const float2& s) {
     if(s.x == 1.0f && s.y == 1.0f) return; // nothing to do
     
     int newWidth  = w  * s.x;

@@ -45,16 +45,16 @@ public:
     void translateX(int dx);
     void translateY(int dy);
 
-    void scale(int s);
-    void scale(int sX, int sY);
-    void scale(const int2& s);
+    void scale(float s);
+    void scale(float sX, float sY);
+    void scale(const float2& s);
     
-    void scaleWidth(int  sX);
-    void scaleHeight(int sY);
+    void scaleWidth(float  sX);
+    void scaleHeight(float sY);
     
-    void scaleFromCenter(int s);
-    void scaleFromCenter(int sX, int sY);
-    void scaleFromCenter(const int2& s);
+    void scaleFromCenter(float s);
+    void scaleFromCenter(float sX, float sY);
+    void scaleFromCenter(const float2& s);
     
     bool isCorrect();   //w>=0, h>=0
     bool inside(int px, int py) const;
