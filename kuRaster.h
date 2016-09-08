@@ -151,6 +151,12 @@ public:
     void threshold( T thresh, T value0, T value1 );
 private:
     vector<T> *_pixels;
+
+	
+	// copy and assignment prohibited	
+	//https://habrahabr.ru/company/abbyy/blog/142595/
+	kuRaster_( const kuRaster_& );
+	void kuRaster_::operator=( const kuRaster_& );
 };
 
 
