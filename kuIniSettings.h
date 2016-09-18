@@ -7,8 +7,8 @@
 class kuIniSettings {
 public:
 
-    kuIniSettings() {}
-    kuIniSettings(string filename) { load(filename); }
+	kuIniSettings() {}
+	kuIniSettings(string filename) { load(filename); }
 
     typedef map<string, string, less<string> > StringStringMap;
 

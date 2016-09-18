@@ -23,7 +23,7 @@ static istream& crossplatform_getline(istream& is, string& str) {
 }
 
 bool kuIniSettings::load(string filename, bool clearFirst, bool verbose ) {
-    if ( verbose ) kuLog << "\tloading ini " << filename << endl;
+    if ( verbose ) kuLog << "\tLoading ini " << filename << endl;
     filename_ = filename;
     //filename = ofToDataPath(filename);
     kuAssert( kuFileExists(filename), "ini file \"" + filename + "\" doesn't exists" );

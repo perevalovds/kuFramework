@@ -46,3 +46,11 @@ void kuExitSilent( int exitCode );
 //Запомнить команду, которая была вызвана, чтобы ее занести в файл в случае ошибки
 void kuLog_store_command( string kud );
 
+void kuExitDisable(bool v);	
+//Выходить ли из программы в случае ошибки.
+//Если выключено - то, последняя ошибка хранится в ku_error_string,
+//а флаг была ли ошибка - в ku_error_flag
+
+void ku_error_reset();
+bool ku_error_flag();
+string ku_error_string();
