@@ -158,7 +158,7 @@ private:
 public:
 	//Операции копирования и присваивания
 	kuRaster_( const kuRaster_&a ) {  w = h = 0; _pixels = 0; a.copyTo(*this); }
-	void kuRaster_::operator=( const kuRaster_& a) { a.copyTo(*this); }
+//	void kuRaster_::operator=( const kuRaster_& a) { a.copyTo(*this); }
 
 };
 
