@@ -11,7 +11,6 @@ public:
 	kuIniSettings(string filename) { load(filename); }
 
 	typedef map<string, string> StringStringMap;
-    //typedef map<string, string, less<string> > StringStringMap;
 
     bool load( string filename, bool clearFirst=true, bool verbose = false );
     bool loadSilent( string filename, bool clearFirst=true ) { return load(filename, clearFirst, false); }
@@ -49,8 +48,6 @@ public:
     }
 
     void setString( const string &key, const string &value ) {
-        //_values.insert( StringStringMapValueType( key, value) );
-		cout << " add " << key << " = " << value << endl;
         if ( keyExists(key) ) { deleteKey( key ); }
 		keys[key] = value;
     }
@@ -67,7 +64,7 @@ public:
 
     string filename_;
 protected:
-   // StringStringMap _values;
+
 };
 
 
