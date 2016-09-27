@@ -10,7 +10,8 @@ public:
 	kuIniSettings() {}
 	kuIniSettings(string filename) { load(filename); }
 
-    typedef map<string, string, less<string> > StringStringMap;
+	typedef map<string, string> StringStringMap;
+    //typedef map<string, string, less<string> > StringStringMap;
 
     bool load( string filename, bool clearFirst=true, bool verbose = false );
     bool loadSilent( string filename, bool clearFirst=true ) { return load(filename, clearFirst, false); }
@@ -19,7 +20,6 @@ public:
 
     vector<string> getKeys() {
         vector<string> _keys;
-        typedef map<string, string> StringStringMap;
 
         for (StringStringMap::const_iterator iter = keys.begin();
             iter != keys.end(); iter++) {
@@ -41,17 +41,18 @@ public:
         return _keys;
     }
     void deleteKey( string key )	{
-        _values.erase( key );
+		keys.erase( key );
     }
     bool keyExists( const string &key ) {
-        StringStringMap::iterator p = _values.find( key );
-        return ( p != _values.end() );
+        StringStringMap::iterator p = keys.find( key );
+        return ( p != keys.end() );
     }
 
     void setString( const string &key, const string &value ) {
         //_values.insert( StringStringMapValueType( key, value) );
+		cout << " add " << key << " = " << value << endl;
         if ( keyExists(key) ) { deleteKey( key ); }
-        _values[key] = value;
+		keys[key] = value;
     }
 
     map<string,string> keys;
@@ -66,7 +67,7 @@ public:
 
     string filename_;
 protected:
-    StringStringMap _values;
+   // StringStringMap _values;
 };
 
 
