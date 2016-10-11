@@ -10,9 +10,10 @@
 #include "kuRaster.h"
 #include "kuRasterProc.h"
 
-
 #include "kuArgs.h"
 #include "kuIniSettings.h"
+
+#include "kuSlowBit.h"
 
 #include "kuLog.h"
 
