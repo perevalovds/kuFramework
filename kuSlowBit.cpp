@@ -10,6 +10,26 @@ kuSlowBit::kuSlowBit()
     _value = _state;
 }
 
+
+//--------------------------------------------------------------
+void kuSlowBit::setup(float time00, float time01, float time10, float time11,
+					  string title0 ) {
+    time00 = max(time00, 0.000001f);
+    time01 = max(time01, 0.000001f);
+    time10 = max(time10, 0.000001f);
+    time11 = max(time11, 0.000001f);
+    speed00 = 1.0 / time00;
+    speed01 = 1.0 / time01;
+    speed10 = 1.0 / time10;
+    speed11 = 1.0 / time11;
+
+    _state = 0;
+    _lastState = _state;
+    _value = _state;
+    
+    title = title0;
+}
+
 //--------------------------------------------------------------
 void kuSlowBit::setup( string line, string title0 )
 {
@@ -17,22 +37,7 @@ void kuSlowBit::setup( string line, string title0 )
     kuAssert( list.size() >= 4,
                      "Bad or empty slowbit '" + title0
                      + "' string '" + line + "'" );
-    
-    for (int i=0; i<list.size(); i++) {
-        if ( list[i] < 0.000001 ) {
-            list[i] = 0.000001;
-        }
-    }
-    speed00 = 1.0 / list[0];
-    speed01 = 1.0 / list[1];
-    speed10 = 1.0 / list[2];
-    speed11 = 1.0 / list[3];
-
-    _state = 0;
-    _lastState = _state;
-    _value = _state;
-    
-    title = title0;
+	setup( list[0], list[1], list[2], list[3] );
 }
 
 //--------------------------------------------------------------

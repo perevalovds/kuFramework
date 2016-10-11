@@ -11,6 +11,7 @@ struct kuSlowBit {
     //0->0, 0->1, 1->0, 1->1,
     //например, "1.0, 0.1, 1.0, 0.1"
     void setup( string line, string title="" );
+	void setup( float time00, float time01, float time10, float time11, string title0 = "" );
     void update( float dt, int target ); //target - целевое состояние в которое сейчас надо идти
     
     int state();       //текущее состояние
