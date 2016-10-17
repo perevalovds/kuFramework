@@ -24,6 +24,7 @@ HEADERS += \
         kuRaster.h	\
         kuRasterProc.h	\
         kuRect.h	\
+		kuSlowBit.h   \
         kuUtils.h	\
         kuValueMap.h	\
         kuXmlSettings.h
@@ -40,6 +41,7 @@ SOURCES += \
         kuRaster.cpp	\
         kuRasterProc.cpp	\
         kuRect.cpp	\
+		kuSlowBit.cpp   \
         kuUtils.cpp	\
         kuValueMap.cpp	\
         kuXmlSettings.cpp
