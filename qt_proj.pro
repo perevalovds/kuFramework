@@ -15,7 +15,7 @@ HEADERS += \
         int2.h	    \
         kuArgs.h	\
         kuConstants.h	\
-        #kuImages_of.h	\
+        kuImages_qt.h	\
         kuIniSettings.h	\
         kuLog.h		\
         kuMain.h	\
@@ -33,7 +33,7 @@ HEADERS += \
 SOURCES += \
         float2.cpp	\
         kuArgs.cpp	\
-        #kuImages_of.cpp	\
+        kuImages_qt.cpp	\
         kuIniSettings.cpp	\
         kuLog.cpp	\
         kuMath.cpp	\
