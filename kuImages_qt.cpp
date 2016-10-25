@@ -134,6 +134,7 @@ void kuSaveImage_DrawText( kuRaster_u8 &pix, const string &fileName,
 }
 
 
+
 //----------------------------------------
 bool kuLoadImage( kuRaster_u8 &pix, const string &fileName, int channel )
 {
@@ -174,6 +175,43 @@ bool kuLoadImage( kuRaster_u8 &pix, const string &fileName, int channel )
     kuLogImg( w, h, << endl << "converted " << fileName << " " << w << " x " << h << endl );
 
     return true;
+}
+
+
+//----------------------------------------
+bool kuLoadImage( kuRaster_u8_3 &pix, const string &fileName ) {
+    kuAssert( kuFileExists( fileName ),  "kuLoadImage, file not exists " + fileName );
+
+    QImage img;
+    img.load( fileName.c_str() );
+    int w = img.width();
+    int h = img.height();
+
+    kuAssert( w>0 && h>0, "File exists, but loaded as empty image, " + fileName + " (check Qt plugins)" );
+    kuLogImg( w, h, << "loaded " << fileName << " " << w << " x " << h << endl );
+
+    pix.allocate( w, h, 0 );
+
+    int step = 10000000;
+    int cnt = 0;
+
+    kuLogImg( w, h, << "converting to raster..." << endl );
+    for (int i=0; i<w*h; i++) {
+        QRgb color = img.pixel( i % w, i / w );
+        pix.pixelsPointer()[i] = u8_3(qRed(color), qGreen(color), qBlue(color));
+
+        if ( w*h > kuLog_ImageSize ) {
+            if ( cnt==0 ) {
+                cnt = step;
+                kuLog << int( 100.0 * i / (w*h) ) << " %  \t" << endl << flush;
+            }
+            cnt--;
+        }
+    }
+    kuLogImg( w, h, << endl << "converted " << fileName << " " << w << " x " << h << endl );
+
+    return true;
+
 }
 
 //----------------------------------------
@@ -226,7 +264,7 @@ bool kuLoadImageFrag( kuRaster_u8 &pix, const string &fileName, kuRecti rect, in
 }
 
 //----------------------------------------
-bool kuSaveImageColor( kuRaster_u8 &img_1, kuRaster_u8 &img_2, kuRaster_u8 &img_3, const string &fileName )
+bool kuSaveImageChannels( kuRaster_u8 &img_1, kuRaster_u8 &img_2, kuRaster_u8 &img_3, const string &fileName )
 {
    if ( img_1.w > 0 && img_1.h > 0 && img_2.w > 0 && img_2.h > 0 && img_3.w > 0 && img_3.h > 0 ) {
         kuLog << "\tsaving_color " << fileName << endl;
