@@ -15,7 +15,7 @@ HEADERS += \
         int2.h	    \
         kuArgs.h	\
         kuConstants.h	\
-        #kuImages_of.h	\
+        kuImages_qt.h	\
         kuIniSettings.h	\
         kuLog.h		\
         kuMain.h	\
@@ -24,6 +24,7 @@ HEADERS += \
         kuRaster.h	\
         kuRasterProc.h	\
         kuRect.h	\
+		kuSlowBit.h   \
         kuUtils.h	\
         kuValueMap.h	\
         kuXmlSettings.h
@@ -32,7 +33,7 @@ HEADERS += \
 SOURCES += \
         float2.cpp	\
         kuArgs.cpp	\
-        #kuImages_of.cpp	\
+        kuImages_qt.cpp	\
         kuIniSettings.cpp	\
         kuLog.cpp	\
         kuMath.cpp	\
@@ -40,6 +41,7 @@ SOURCES += \
         kuRaster.cpp	\
         kuRasterProc.cpp	\
         kuRect.cpp	\
+		kuSlowBit.cpp   \
         kuUtils.cpp	\
         kuValueMap.cpp	\
         kuXmlSettings.cpp

@@ -36,7 +36,7 @@ union u8_3 {
     u8_3( u8 r, u8 g, u8 b ) {
         c.r=r; c.g=g; c.b=b;
     }
-
+    int brightness() { return (int(c.r) + int(c.g) + int(c.b))/3; }
 };
 
 //Типы растров
