@@ -345,21 +345,33 @@ bool kuFileExists( string filename ) {
 }
 
 //--------------------------------------------------
-/*u64 kuFileSize( string fileName ) {
+u64  kuFileSize( string fileName ) {
     //struct stat stat_buf;
     //int rc = stat( fileName.c_str(), &stat_buf );
     //return rc == 0 ? stat_buf.st_size : 0; //-1;
 
-    u64 size = 0;
-    FILE *file = fopen( fileName.c_str(),"rb" );
-    if ( file ) {
-        fseeko64( file, 0, SEEK_END );
-        //TODO контроль того что ошибка
-        size = ftello64( file );
-        fclose( file );
-    }
-    return size;
-}*/
+	//64 bit
+    //u64 size = 0;
+    //FILE *file = fopen( fileName.c_str(),"rb" );
+    //if ( file ) {
+    //  fseeko64( file, 0, SEEK_END );
+    //    //TODO контроль того что ошибка
+    //   size = ftello64( file );
+    //    fclose( file );
+    //}
+    //return size;
+
+	//32 bit
+	u64 size = 0;
+	FILE *file = fopen( fileName.c_str(), "rb" );
+	if ( file ) {
+		fseek( file, 0, SEEK_END );
+		size = ftell( file );	
+		fclose( file );
+	}
+	return size;
+
+}
 
 //--------------------------------------------------
 string kuFileRemoveExtension( string fileName )    //имя файла без расширения

@@ -14,15 +14,8 @@ kuSlowBit::kuSlowBit()
 //--------------------------------------------------------------
 void kuSlowBit::setup(float time00, float time01, float time10, float time11,
 					  string title0 ) {
-    time00 = max(time00, 0.000001f);
-    time01 = max(time01, 0.000001f);
-    time10 = max(time10, 0.000001f);
-    time11 = max(time11, 0.000001f);
-    speed00 = 1.0 / time00;
-    speed01 = 1.0 / time01;
-    speed10 = 1.0 / time10;
-    speed11 = 1.0 / time11;
-
+    
+	update_times(time00, time01, time10, time11);
     _state = 0;
     _lastState = _state;
     _value = _state;
@@ -38,6 +31,18 @@ void kuSlowBit::setup( string line, string title0 )
                      "Bad or empty slowbit '" + title0
                      + "' string '" + line + "'" );
 	setup( list[0], list[1], list[2], list[3] );
+}
+
+//--------------------------------------------------------------
+void kuSlowBit::update_times( float time00, float time01, float time10, float time11 ) {
+	time00 = max(time00, 0.000001f);
+    time01 = max(time01, 0.000001f);
+    time10 = max(time10, 0.000001f);
+    time11 = max(time11, 0.000001f);
+    speed00 = 1.0 / time00;
+    speed01 = 1.0 / time01;
+    speed10 = 1.0 / time10;
+    speed11 = 1.0 / time11;
 }
 
 //--------------------------------------------------------------
